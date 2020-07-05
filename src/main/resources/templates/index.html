@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Esion留言板</title>
+		<script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>
+		<script type='text/javascript'charset='utf-8' src='https://www.layuicdn.com/layui-v2.5.6/layui.js'></script>
+		<link rel='stylesheet' type='text/css' href='https://www.layuicdn.com/layui-v2.5.6/css/layui.css'/>
+		<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+		<style type="text/css">
+			.head{
+				font-size: 25px;
+			}
+			.content{
+				margin-top: 50px;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="layui-col-xs6 layui-col-xs-offset3" style="margin-top: 50px;">
+			<div class="head" align="center">Esion的留言板</div>
+			<div class="layui-row content">
+				<form class="layui-form">
+					<div class="layui-form-item">
+						<label class="layui-form-label">标题</label>
+						<div class="layui-input-block">
+							<input type="text" name="title" placeholder="请输入标题" class="layui-input">
+						</div>
+					</div>
+					<div class="layui-form-item">
+						<label class="layui-form-label">内容</label>
+						<div class="layui-input-block">
+							<textarea name="content" placeholder="请输入内容" class="layui-textarea"></textarea>
+						</div>
+					</div>
+					<div class="layui-form-item">
+						<div class="layui-input-block">
+							<button class="layui-btn" lay-submit lay-filter="messageSub">立即留言</button>
+							<button type="reset" class="layui-btn layui-btn-primary">重置</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</body>
+	<script type="text/javascript">
+		layui.use(['form', 'layer'], function(){
+			var form = layui.form;
+			var layer = layui.layer;
+			form.on('submit(messageSub)', function(data){
+				var load = layer.load(1);
+				var info = JSON.parse(JSON.stringify(data.field));
+				$.post('message/add', info, function(res){
+					if(res.code == '00000'){
+						layer.msg('留言发送成功', {icon: 1});
+					}else{
+						layer.alert(res.message);
+					}
+					layer.close(load)
+				}, 'json');
+				return false;
+			});
+		});
+	</script>
+</html>

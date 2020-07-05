@@ -1,0 +1,69 @@
+<html>
+	<head>
+		<title>登录</title>
+		<meta charset="utf-8">
+		<link rel="stylesheet" href="https://www.layuicdn.com/layui/css/layui.css">
+		<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+		<script src="https://www.layuicdn.com/layui/layui.js"></script>
+		<style type="text/css">
+			.main{
+				margin-top: 10%;
+				background-color: white;
+				height: 60%;
+				border-radius:20px 20px 20px 20px;
+			}
+		</style>
+	</head>
+	<body style="background-image: url('./bg.jpg'); background-size: 100% 100%;">
+		<div class="layui-col-xs4 layui-col-xs-offset4 main">
+		    <div align="center" style="font-size: 30px;margin-top: 8%;"><b>登录</b></div>
+		    <div class="layui-col-xs10 layui-col-xs-offset1">
+		    	<form class="layui-form layui-form-pane">
+			        <div class="layui-form-item" style="margin-top: 8%;margin-bottom: 8%;">
+			        	<label class="layui-form-label">用户名</label>
+			        	<div class="layui-input-block">
+			            	<input type="text" name="id" placeholder="用户名" autocomplete="off"
+			                   class="layui-input">
+			            </div>
+			        </div>
+			        <div class="layui-form-item" style="margin-top: 4%;margin-bottom: 4%;">
+			        	<label class="layui-form-label">密码</label>
+			        	<div class="layui-input-block">
+			            	<input type="password" name="password" placeholder="密码" autocomplete="off"
+			                   class="layui-input">
+			            </div>
+			        </div>
+			        <div class="layui-form-item" style="margin-top: 12%;margin-bottom: 2%;">
+			        	<div class="layui-col-xs6 layui-col-xs-offset3">
+			            	<input style="width: 100%;" type="submit" lay-submit lay-filter="login" class="layui-btn layui-btn-radius" value="登录" />
+			            </div>
+			        </div>
+			        <div align="right" style="margin-top: 8%;">
+			        	<a href="register.html">立即注册</a>
+			        	<a href="javascript:;">忘记密码？</a>
+			        </div>
+			    </form>
+		    </div>
+		</div>
+	</body>
+	<script type="text/javascript">
+		layui.use(['form', 'layer'], function(){
+			var form = layui.form;
+			var layer = layui.layer;
+			form.on('submit(login)', function(data){
+				var load = layer.load(1);
+				var info = JSON.parse(JSON.stringify(data.field))
+				//console.log(info);
+				$.post('user/login', info, function(res){
+					if(res.code == '00000'){
+						window.location.href = "/"
+					}else{
+						layer.close(load);
+						layer.alert(res.message);
+					}
+				}, 'json')
+				return false;
+			})
+		})
+	</script>
+</html>
