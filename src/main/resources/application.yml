@@ -35,3 +35,6 @@ spring:
     cache: false
     encoding: UTF-8
     
+# Mybatis-plus配置
+mybatis-plus:  mapper-locations:  - classpath:mapper/*.xml
+  type-aliases-package: com.qsd.messageboard.po

@@ -6,6 +6,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
+import com.qsd.messageboard.enums.ResultStatus;
+
 /**
  * @Description 
  * @Author Esion
@@ -21,7 +23,7 @@ public class LoginInterceptor implements HandlerInterceptor {
 		if (object != null) {
 			return true;
 		}else {
-			response.sendRedirect("/login.html");
+			response.getWriter().print(ResultStatus.LOGIN_ERROR.toJSONStr());
 			return false;
 		}
 	}

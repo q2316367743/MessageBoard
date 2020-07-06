@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
 	<head>
 		<meta charset="utf-8">
 		<title>Esion留言板</title>
@@ -9,55 +9,118 @@
 		<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 		<style type="text/css">
 			.head{
-				font-size: 25px;
+				font-size: 40px;
+				font-family: "楷体", "楷体_GB2312"
 			}
 			.content{
-				margin-top: 50px;
+				margin-top: 25px;
+				padding: 20px;
+				background-color: #F2F2F2;
+				height: 400px;
+				overflow: auto;
+			}
+			.content::-webkit-scrollbar{
+			    display: none;
+			}
+			.content-title{
+				font-size: 20px;
+			}
+			.content-content{
+			}
+			.content-bottom{
+				margin-top: 10px;
+			}
+			.content-time{}
+			.content-nickname{
+				cursor: pointer;
 			}
 		</style>
 	</head>
 	<body>
 		<div class="layui-col-xs6 layui-col-xs-offset3" style="margin-top: 50px;">
 			<div class="head" align="center">Esion的留言板</div>
-			<div class="layui-row content">
-				<form class="layui-form">
-					<div class="layui-form-item">
-						<label class="layui-form-label">标题</label>
-						<div class="layui-input-block">
-							<input type="text" name="title" placeholder="请输入标题" class="layui-input">
+			<div class="layui-row" style="margin-top: 10px;">
+				<button id="addBtn" type="button" class="layui-btn">新建留言</button>
+			</div>
+			<div class="content">
+  				<div class="layui-row layui-col-space15">
+					<div class="layui-row" th:each="message: ${messages}">
+						<div class="layui-card">
+							<!-- 标题 -->
+							<div class="layui-card-header content-title" th:text="${message.title}"></div>
+							<div class="layui-card-body">
+								<!-- 内容 -->
+								<div class=" content-content" th:text="${message.content}"></div>
+								<!-- 结尾 -->
+								<div class="layui-row content-bottom">
+									<!-- 时间 -->
+									<div class="layui-col-xs9 content-time" th:text="${message.createTime}"></div>
+									<!-- 昵称 -->
+									<div class="layui-col-xs3 content-nickname" th:text="${message.user.nickname}"></div>
+								</div>
+							</div>
 						</div>
 					</div>
-					<div class="layui-form-item">
-						<label class="layui-form-label">内容</label>
-						<div class="layui-input-block">
-							<textarea name="content" placeholder="请输入内容" class="layui-textarea"></textarea>
-						</div>
-					</div>
-					<div class="layui-form-item">
-						<div class="layui-input-block">
-							<button class="layui-btn" lay-submit lay-filter="messageSub">立即留言</button>
-							<button type="reset" class="layui-btn layui-btn-primary">重置</button>
-						</div>
-					</div>
-				</form>
+				</div>
 			</div>
 		</div>
 	</body>
+	<div id="add" style="display: none;margin-top: 40px;" class="layui-col-xs11">
+		<form class="layui-form">
+			<div class="layui-form-item">
+				<label class="layui-form-label">标题</label>
+				<div class="layui-input-block">
+					<input type="text" name="title" autocomplete="off" placeholder="请输入标题" class="layui-input">
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<label class="layui-form-label">内容</label>
+				<div class="layui-input-block">
+					<textarea name="content" placeholder="请输入内容" class="layui-textarea"></textarea>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<div class="layui-input-block">
+					<button class="layui-btn" lay-submit>立即留言</button>
+					<button type="reset" class="layui-btn layui-btn-primary">重置</button>
+				</div>
+			</div>
+		</form>
+	</div>
 	<script type="text/javascript">
 		layui.use(['form', 'layer'], function(){
 			var form = layui.form;
 			var layer = layui.layer;
-			form.on('submit(messageSub)', function(data){
+			$("#addBtn").on('click', function(){
+				dialog = layer.open({
+					type: 1,
+				    title: '新增留言',
+				    shadeClose: true,
+				    shade: false,
+				    maxmin: true, //开启最大化最小化按钮
+				    area: ['600px', '400px'],
+				    content: $("#add")
+				});
+			})
+			form.on('submit', function(data){
 				var load = layer.load(1);
 				var info = JSON.parse(JSON.stringify(data.field));
 				$.post('message/add', info, function(res){
+					console.log(res)
 					if(res.code == '00000'){
 						layer.msg('留言发送成功', {icon: 1});
+						layer.close(dialog);
+						//刷新留言
+						window.location.reload();
+					}else if(res.code == 'A0200'){
+						layer.confirm('未登录，请先登录！', function(index){
+							window.location.href = 'login.html';
+						});   
 					}else{
 						layer.alert(res.message);
 					}
-					layer.close(load)
-				}, 'json');
+					layer.close(load);
+				}, 'json')
 				return false;
 			});
 		});

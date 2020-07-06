@@ -1,5 +1,7 @@
 package com.qsd.messageboard.service;
 
+import java.util.List;
+
 import com.qsd.messageboard.enums.ResultStatus;
 import com.qsd.messageboard.po.Message;
 
@@ -17,5 +19,9 @@ public interface MessageService {
 	 * @param user_id 用户ID
 	 * */
 	public ResultStatus add(Message message, String userId);
+	/**
+	 * 获取全部留言
+	 * */
+	public List<Message> all();
 	
 }

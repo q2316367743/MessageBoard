@@ -54,7 +54,7 @@
 				var load = layer.load(1);
 				var info = JSON.parse(JSON.stringify(data.field))
 				//console.log(info);
-				$.post('user/login', info, function(res){
+				$.post('login', info, function(res){
 					if(res.code == '00000'){
 						window.location.href = "/"
 					}else{

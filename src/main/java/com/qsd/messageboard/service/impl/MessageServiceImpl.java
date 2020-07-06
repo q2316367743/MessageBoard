@@ -1,6 +1,7 @@
 package com.qsd.messageboard.service.impl;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,6 +31,12 @@ public class MessageServiceImpl implements MessageService {
 			return ResultStatus.SUCCESS;
 		}
 		return ResultStatus.SYSTEM_ERROR;
+	}
+
+	@Override
+	public List<Message> all() {
+		List<Message> messages = messageDao.queryMessages();
+		return messages;
 	}
 
 }

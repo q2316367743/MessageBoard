@@ -1,5 +1,7 @@
 package com.qsd.messageboard.dao;
 
+import java.util.List;
+
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.qsd.messageboard.po.Message;
 
@@ -10,5 +12,7 @@ import com.qsd.messageboard.po.Message;
  */
 
 public interface MessageDao extends BaseMapper<Message> {
+	
+	public List<Message> queryMessages();
 
 }

@@ -1,5 +1,6 @@
 package com.qsd.messageboard.po;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 
 import com.baomidou.mybatisplus.annotation.IdType;
@@ -13,8 +14,9 @@ import com.baomidou.mybatisplus.annotation.TableName;
  * @Data 2020年7月5日
  */
 @TableName("message")
-public class Message {
+public class Message implements Serializable {
 	
+	private static final long serialVersionUID = -37495510309824867L;
 	@TableId(type = IdType.AUTO)
 	private Integer id;
 	@TableField("user_id")
@@ -23,6 +25,8 @@ public class Message {
 	@TableField("create_time")
 	private Timestamp createTime;
 	private String content;
+	@TableField(exist = false)
+	private User user;
 	public Integer getId() {
 		return id;
 	}
@@ -52,6 +56,17 @@ public class Message {
 	}
 	public void setContent(String content) {
 		this.content = content;
+	}
+	public User getUser() {
+		return user;
+	}
+	public void setUser(User user) {
+		this.user = user;
+	}
+	@Override
+	public String toString() {
+		return "Message [id=" + id + ", userId=" + userId + ", title=" + title + ", createTime=" + createTime
+				+ ", content=" + content + ", user=" + user + "]";
 	}
 
 }
