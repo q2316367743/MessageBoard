@@ -1,15 +1,17 @@
 package com.qsd.messageboard.service.impl;
 
 import java.sql.Timestamp;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.qsd.messageboard.dao.MessageDao;
 import com.qsd.messageboard.enums.ResultStatus;
 import com.qsd.messageboard.po.Message;
 import com.qsd.messageboard.service.MessageService;
+import com.qsd.messageboard.vo.PageVo;
 
 /**
  * @Description 
@@ -34,9 +36,9 @@ public class MessageServiceImpl implements MessageService {
 	}
 
 	@Override
-	public List<Message> all() {
-		List<Message> messages = messageDao.queryMessages();
-		return messages;
+	public PageVo<Message> all(Integer page, Integer limit) {
+		IPage<Message> messages = messageDao.queryMessages(new Page<>(page, limit));
+		return new PageVo<>(ResultStatus.SUCCESS, messages.getCurrent(), messages.getTotal(), messages.getRecords());
 	}
 
 }

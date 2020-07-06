@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<html lang="zh">
 	<head>
 		<meta charset="utf-8">
 		<title>Esion留言板</title>
@@ -12,11 +12,11 @@
 				font-size: 40px;
 				font-family: "楷体", "楷体_GB2312"
 			}
-			.content{
-				margin-top: 25px;
+			#content{
+				margin-top: 20px;
 				padding: 20px;
 				background-color: #F2F2F2;
-				height: 400px;
+				height: 380px;
 				overflow: auto;
 			}
 			.content::-webkit-scrollbar{
@@ -37,31 +37,32 @@
 		</style>
 	</head>
 	<body>
-		<div class="layui-col-xs6 layui-col-xs-offset3" style="margin-top: 50px;">
+		<div class="layui-col-xs6 layui-col-xs-offset3" style="margin-top: 30px;">
 			<div class="head" align="center">Esion的留言板</div>
 			<div class="layui-row" style="margin-top: 10px;">
 				<button id="addBtn" type="button" class="layui-btn">新建留言</button>
 			</div>
-			<div class="content">
-  				<div class="layui-row layui-col-space15">
-					<div class="layui-row" th:each="message: ${messages}">
+			<div class="layui-row">
+  				<div id="content" class="layui-row layui-col-space15">
+					<div class="layui-row" v-for="message in messages">
 						<div class="layui-card">
 							<!-- 标题 -->
-							<div class="layui-card-header content-title" th:text="${message.title}"></div>
+							<div class="layui-card-header content-title" v-text="message.title"></div>
 							<div class="layui-card-body">
 								<!-- 内容 -->
-								<div class=" content-content" th:text="${message.content}"></div>
+								<div class=" content-content" v-text="message.content"></div>
 								<!-- 结尾 -->
 								<div class="layui-row content-bottom">
 									<!-- 时间 -->
-									<div class="layui-col-xs9 content-time" th:text="${message.createTime}"></div>
+									<div class="layui-col-xs9 content-time" v-text="message.createTime"></div>
 									<!-- 昵称 -->
-									<div class="layui-col-xs3 content-nickname" th:text="${message.user.nickname}"></div>
+									<div class="layui-col-xs3 content-nickname" v-text="message.user.nickname"></div>
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
+				<div id="page" align="center" style="margin-top: 20px;"></div>
 			</div>
 		</div>
 	</body>
@@ -88,9 +89,19 @@
 		</form>
 	</div>
 	<script type="text/javascript">
-		layui.use(['form', 'layer'], function(){
+		var vue = new Vue({
+			el: '#content',
+			data: {
+				messages: []
+			},
+			method: {
+				
+			}
+		})
+		layui.use(['form', 'layer', 'laypage'], function(){
 			var form = layui.form;
 			var layer = layui.layer;
+			var laypage = layui.laypage;
 			$("#addBtn").on('click', function(){
 				dialog = layer.open({
 					type: 1,
@@ -123,6 +134,31 @@
 				}, 'json')
 				return false;
 			});
+			var load = layer.load(1);
+			$.getJSON('message/all', {
+				page: 1,
+				limit: 9
+			}, function(res){
+				layer.close(load);
+				laypage.render({
+					elem: 'page', //注意，这里的 test1 是 ID，不用加 # 号
+					count: res.count, //数据总数，从服务端得到
+					jump: function(obj, first){
+					    //首次不执行
+					    if(!first){
+					    	var load = layer.load(1);
+					    	$.getJSON('message/all', {
+					    		page: obj.curr,
+					    		limit: obj.limit
+					    	}, function(res){
+					    		layer.close(load);
+					    		vue.message = res.data;
+					    	});
+					    }
+					  }
+				});
+				vue.messages = res.data;
+			})
 		});
 	</script>
 </html>

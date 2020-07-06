@@ -1,9 +1,8 @@
 package com.qsd.messageboard.service;
 
-import java.util.List;
-
 import com.qsd.messageboard.enums.ResultStatus;
 import com.qsd.messageboard.po.Message;
+import com.qsd.messageboard.vo.PageVo;
 
 /**
  * @Description 
@@ -22,6 +21,6 @@ public interface MessageService {
 	/**
 	 * 获取全部留言
 	 * */
-	public List<Message> all();
+	public PageVo<Message> all(Integer page, Integer limit);
 	
 }

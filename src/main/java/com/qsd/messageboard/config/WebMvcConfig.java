@@ -24,7 +24,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
 		List<String> addPathPatterns = new ArrayList<>();
-		addPathPatterns.add("/message/**");
+		addPathPatterns.add("/message/add");
 		addPathPatterns.add("/user/**");
 		List<String> excludePathPatterns = new ArrayList<>();
 		registry.addInterceptor(loginInterceptor)
