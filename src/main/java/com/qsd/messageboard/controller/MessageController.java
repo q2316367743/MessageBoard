@@ -8,11 +8,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.qsd.messageboard.enums.ResultStatus;
 import com.qsd.messageboard.po.Message;
 import com.qsd.messageboard.po.User;
 import com.qsd.messageboard.service.MessageService;
 import com.qsd.messageboard.vo.BaseVo;
 import com.qsd.messageboard.vo.PageVo;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 
 /**
  * @Description 
@@ -21,19 +26,30 @@ import com.qsd.messageboard.vo.PageVo;
  */
 @RestController
 @RequestMapping("message")
+@Api(value = "留言操作类")
 public class MessageController {
 	
 	@Autowired
 	private MessageService messageService;
 	
+	@ApiOperation(value = "新增留言")
 	@PostMapping("add")
-	public BaseVo add(Message message, HttpServletRequest request) {
+	public BaseVo add(
+			@ApiParam(value = "留言标题", required = true) String title,
+			@ApiParam(value = "留言内容", required = true)String content, 
+			HttpServletRequest request) {
+		if (title == null || content == null) {
+			return new BaseVo(ResultStatus.REQUEST_PARAM_MISS);
+		}
 		User user = (User) request.getSession().getAttribute("user");
-		return new BaseVo(messageService.add(message, user.getId()));
+		return new BaseVo(messageService.add(title, content, user.getId()));
 	}
 	
 	@GetMapping("all")
-	public PageVo<Message> all(Integer page, Integer limit){
+	@ApiOperation(value = "查询全部留言")
+	public PageVo<Message> all(
+			@ApiParam(value = "页码", required = false, example = "1")Integer page, 
+			@ApiParam(value = "每页的数目", required = false, example = "9")Integer limit){
 		return messageService.all(page, limit);
 	}
 

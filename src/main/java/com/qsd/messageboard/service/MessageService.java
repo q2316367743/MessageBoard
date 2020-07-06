@@ -17,7 +17,7 @@ public interface MessageService {
 	 * @param message 留言信息
 	 * @param user_id 用户ID
 	 * */
-	public ResultStatus add(Message message, String userId);
+	public ResultStatus add(String title, String content, String userId);
 	/**
 	 * 获取全部留言
 	 * */

@@ -25,9 +25,8 @@ public class MessageServiceImpl implements MessageService {
 	private MessageDao messageDao;
 
 	@Override
-	public ResultStatus add(Message message, String userId) {
-		message.setUserId(userId);
-		message.setCreateTime(new Timestamp(System.currentTimeMillis()));
+	public ResultStatus add(String title, String content, String userId) {
+		Message message = new Message(userId, title, new Timestamp(System.currentTimeMillis()), content);
 		int result = messageDao.insert(message);
 		if (result > 0) {
 			return ResultStatus.SUCCESS;
@@ -37,6 +36,12 @@ public class MessageServiceImpl implements MessageService {
 
 	@Override
 	public PageVo<Message> all(Integer page, Integer limit) {
+		if (page == null) {
+			page = 1;
+		}
+		if (limit == null) {
+			limit = 9;
+		}
 		IPage<Message> messages = messageDao.queryMessages(new Page<>(page, limit));
 		return new PageVo<>(ResultStatus.SUCCESS, messages.getCurrent(), messages.getTotal(), messages.getRecords());
 	}

@@ -38,3 +38,16 @@ spring:
 # Mybatis-plus配置
 mybatis-plus:  mapper-locations:  - classpath:mapper/*.xml
   type-aliases-package: com.qsd.messageboard.po
+  
+# Swagger配置
+#swagger:#  enabled: true
+#  title: 留言板
+#  description: java程序员进阶之路
+#  version: 1.5
+#  license: Apache License, Version 2.0
+#  license-url: https://www.apache.org/licenses/LICENSE-2.0.html
+#  terms-of-service-url: https://github.com/q2316367743/MessageBoard
+#  contact:#    name: 乔盛达
+#    email: m17762618644@163.com
+#    url: https://github.com/q2316367743
+    

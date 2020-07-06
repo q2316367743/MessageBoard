@@ -1,5 +1,6 @@
 package com.qsd.messageboard.config;
 
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -12,6 +13,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.optimize.JsqlParser
  * @Data 2020年7月6日
  */
 @Configuration
+@MapperScan("com.qsd.messageboard.dao")
 public class MyBatisPlusConfig {
 
 	@Bean
