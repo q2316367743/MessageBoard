@@ -20,6 +20,8 @@ public interface MessageService {
 	public ResultStatus add(String title, String content, String userId);
 	/**
 	 * 获取全部留言
+	 * @param page 页码
+	 * @param limit 每页的数目
 	 * */
 	public PageVo<Message> all(Integer page, Integer limit);
 	
