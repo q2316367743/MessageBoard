@@ -4,65 +4,132 @@
 		<meta charset="utf-8">
 		<title>Esion留言板</title>
 		<script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>
-		<script type='text/javascript'charset='utf-8' src='https://www.layuicdn.com/layui-v2.5.6/layui.js'></script>
-		<link rel='stylesheet' type='text/css' href='https://www.layuicdn.com/layui-v2.5.6/css/layui.css'/>
+		<script type='text/javascript' charset='utf-8' src='https://www.layuicdn.com/layui-v2.5.6/layui.js'></script>
+		<link rel='stylesheet' type='text/css' href='https://www.layuicdn.com/layui-v2.5.6/css/layui.css' />
 		<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 		<style type="text/css">
-			.head{
-				font-size: 40px;
-				font-family: "楷体", "楷体_GB2312"
+			.logo {
+				font-size: 25px;
+				font-family: "楷体", "楷体_GB2312";
+				color: black;
+				position: absolute;
+				left: 0;
+				top: 0;
+				width: 200px;
+				height: 100%;
+				line-height: 60px;
+				text-align: center;
 			}
-			#content{
+			.header{
+				background-color: white;
+				z-index: 1000;
+				height: 60px;
+				position: relative;
+			}
+			#content {
 				margin-top: 20px;
 				padding: 20px;
 				background-color: #F2F2F2;
-				height: 380px;
+				height: 400px;
 				overflow: auto;
 			}
-			#content::-webkit-scrollbar{
-			    display: none;
+
+			#content::-webkit-scrollbar {
+				display: none;
 			}
-			.content-title{
+
+			.content-title {
 				font-size: 20px;
 			}
-			.content-content{
-			}
-			.content-bottom{
+
+			.content-content {}
+
+			.content-bottom {
 				margin-top: 10px;
 			}
-			.content-time{}
-			.content-nickname{
+
+			.content-time {}
+
+			.content-nickname {
 				cursor: pointer;
+			}
+			.nav{
+				background-color: white;
+				float: right;
+			}
+			.nav-title{
+				padding: 0 20px;
+				color: black;
+				cursor: pointer;
+			}
+			.nav-title:hover{
+				padding: 0 20px;
+				color: black;
+			}
+			.login{
+				padding: 0 20px;
+				height: 60px;
+				float: right;
+				text-align: center;
+				line-height: 60px;
+			}
+			.login-title{
+				padding: 0 20px;
+				height: 60px;
+				width: 56px;
 			}
 		</style>
 	</head>
-	<body>
-		<div class="layui-col-xs6 layui-col-xs-offset3" style="margin-top: 30px;">
-			<div class="head" align="center">Esion的留言板</div>
-			<div class="layui-row" style="margin-top: 10px;">
-				<button id="addBtn" type="button" class="layui-btn">新建留言</button>
+	<body class="layui-layout-body">
+		<div id="vue" class="layui-layout layui-layout-admin">
+			<div class="header">
+				<div class="logo">
+					Esion的留言板
+				</div>
+				<div class="layui-col-xs3 layui-col-xs-offset9">
+					<div class="login" v-if="nickname == ''">
+						<a class="login-title" href="login.html">登录</a>
+						<span>|</span>
+						<a class="login-title" href="register.html">注册</a>
+					</div>
+					<ul class="layui-nav nav" v-else>
+						<li class="layui-nav-item">
+							<div href="javascript:;" class="nav-title" v-text="nickname"></div>
+							<dl class="layui-nav-child">
+								<dd><a href="javascript:;">修改信息</a></dd>
+								<dd><a href="javascript:;">安全管理</a></dd>
+								<dd><a href="javascript:;" v-on:click="exit()">退了</a></dd>
+							</dl>
+						</li>
+					</ul>
+				</div>
 			</div>
-			<div class="layui-row">
-  				<div id="content" class="layui-row layui-col-space15">
-					<div class="layui-row" v-for="message in messages">
-						<div class="layui-card">
-							<!-- 标题 -->
-							<div class="layui-card-header content-title" v-text="message.title"></div>
-							<div class="layui-card-body">
-								<!-- 内容 -->
-								<div class=" content-content" v-text="message.content"></div>
-								<!-- 结尾 -->
-								<div class="layui-row content-bottom">
-									<!-- 时间 -->
-									<div class="layui-col-xs9 content-time" v-text="message.createTime"></div>
-									<!-- 昵称 -->
-									<div class="layui-col-xs3 content-nickname" v-text="message.user.nickname"></div>
+			<div class="layui-col-xs6 layui-col-xs-offset3">
+				<div class="layui-row" style="margin-top: 10px;">
+					<button id="addBtn" type="button" class="layui-btn">新建留言</button>
+				</div>
+				<div class="layui-row">
+					<div id="content" class="layui-row layui-col-space15">
+						<div class="layui-row" v-for="message in messages">
+							<div class="layui-card">
+								<!-- 标题 -->
+								<div class="layui-card-header content-title" v-text="message.title"></div>
+								<div class="layui-card-body">
+									<!-- 内容 -->
+									<div class=" content-content" v-text="message.content"></div>
+									<!-- 结尾 -->
+									<div class="layui-row content-bottom">
+										<!-- 时间 -->
+										<div class="layui-col-xs9 content-time" v-text="message.createTime"></div>
+										<!-- 昵称 -->
+										<div class="layui-col-xs3 content-nickname" v-text="message.user.nickname"></div>
+									</div>
 								</div>
 							</div>
 						</div>
 					</div>
+					<div id="page" align="center" style="margin-top: 20px;"></div>
 				</div>
-				<div id="page" align="center" style="margin-top: 20px;"></div>
 			</div>
 		</div>
 	</body>
@@ -90,44 +157,60 @@
 	</div>
 	<script type="text/javascript">
 		var vue = new Vue({
-			el: '#content',
+			el: '#vue',
 			data: {
-				messages: []
+				messages: [],
+				nickname: ''
 			},
-			method: {
-				
+			methods: {
+				exit: function(){
+					var thos = this;
+					$.getJSON('exit', function(res){
+						sessionStorage.removeItem("nickname");
+						thos.nickname = "";
+					})
+				}
+			},
+			created: function() {
+				var nickname = sessionStorage.getItem('nickname');
+				if(nickname != null){
+					this.nickname = nickname;
+				}
 			}
 		})
-		layui.use(['form', 'layer', 'laypage'], function(){
+		layui.use(['form', 'layer', 'laypage', 'element'], function() {
 			var form = layui.form;
 			var layer = layui.layer;
 			var laypage = layui.laypage;
-			$("#addBtn").on('click', function(){
+			var element = layui.element;
+			$("#addBtn").on('click', function() {
 				dialog = layer.open({
 					type: 1,
-				    title: '新增留言',
-				    shadeClose: true,
-				    shade: false,
-				    maxmin: true, //开启最大化最小化按钮
-				    area: ['600px', '400px'],
-				    content: $("#add")
+					title: '新增留言',
+					shadeClose: true,
+					shade: false,
+					maxmin: true, //开启最大化最小化按钮
+					area: ['600px', '400px'],
+					content: $("#add")
 				});
 			})
-			form.on('submit', function(data){
+			form.on('submit', function(data) {
 				var load = layer.load(1);
 				var info = JSON.parse(JSON.stringify(data.field));
-				$.post('message/add', info, function(res){
+				$.post('message/add', info, function(res) {
 					console.log(res)
-					if(res.code == '00000'){
-						layer.msg('留言发送成功', {icon: 1});
+					if (res.code == '00000') {
+						layer.msg('留言发送成功', {
+							icon: 1
+						});
 						layer.close(dialog);
 						//刷新留言
 						window.location.reload();
-					}else if(res.code == 'A0200'){
-						layer.confirm('未登录，请先登录！', function(index){
+					} else if (res.code == 'A0200') {
+						layer.confirm('未登录，请先登录！', function(index) {
 							window.location.href = 'login.html';
-						});   
-					}else{
+						});
+					} else {
 						layer.alert(res.message);
 					}
 					layer.close(load);
@@ -138,24 +221,24 @@
 			$.getJSON('message/all', {
 				page: 1,
 				limit: 9
-			}, function(res){
+			}, function(res) {
 				layer.close(load);
 				laypage.render({
 					elem: 'page', //注意，这里的 test1 是 ID，不用加 # 号
 					count: res.count, //数据总数，从服务端得到
-					jump: function(obj, first){
-					    //首次不执行
-					    if(!first){
-					    	var load = layer.load(1);
-					    	$.getJSON('message/all', {
-					    		page: obj.curr,
-					    		limit: obj.limit
-					    	}, function(res){
-					    		layer.close(load);
-					    		vue.message = res.data;
-					    	});
-					    }
-					  }
+					jump: function(obj, first) {
+						//首次不执行
+						if (!first) {
+							var load = layer.load(1);
+							$.getJSON('message/all', {
+								page: obj.curr,
+								limit: obj.limit
+							}, function(res) {
+								layer.close(load);
+								vue.message = res.data;
+							});
+						}
+					}
 				});
 				vue.messages = res.data;
 			})
