@@ -7,25 +7,9 @@
 		<script type='text/javascript' charset='utf-8' src='https://www.layuicdn.com/layui-v2.5.6/layui.js'></script>
 		<link rel='stylesheet' type='text/css' href='https://www.layuicdn.com/layui-v2.5.6/css/layui.css' />
 		<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+		<script src="./main.js"></script>
+		<link rel="stylesheet" type="text/css" href="main.css"/>
 		<style type="text/css">
-			.logo {
-				font-size: 25px;
-				font-family: "楷体", "楷体_GB2312";
-				color: black;
-				position: absolute;
-				left: 0;
-				top: 0;
-				width: 200px;
-				height: 100%;
-				line-height: 60px;
-				text-align: center;
-			}
-			.header{
-				background-color: white;
-				z-index: 1000;
-				height: 60px;
-				position: relative;
-			}
 			#content {
 				margin-top: 20px;
 				padding: 20px;
@@ -53,30 +37,10 @@
 			.content-nickname {
 				cursor: pointer;
 			}
-			.nav{
-				background-color: white;
-				float: right;
-			}
-			.nav-title{
-				padding: 0 20px;
-				color: black;
-				cursor: pointer;
-			}
-			.nav-title:hover{
-				padding: 0 20px;
-				color: black;
-			}
-			.login{
-				padding: 0 20px;
-				height: 60px;
-				float: right;
-				text-align: center;
-				line-height: 60px;
-			}
-			.login-title{
-				padding: 0 20px;
-				height: 60px;
-				width: 56px;
+			.content-image{
+				height: 20px;
+				width: 20px;
+				border-radius: 10px;
 			}
 		</style>
 	</head>
@@ -94,7 +58,10 @@
 					</div>
 					<ul class="layui-nav nav" v-else>
 						<li class="layui-nav-item">
-							<div href="javascript:;" class="nav-title" v-text="nickname"></div>
+							<div class="nav-title" onclick="window.location.href = 'user/info.html'">
+								<img class="nav-image" alt="头像" v-bind:src="'http://192.168.0.105/image/messageboard/user/' + portrait">
+								<span v-text="nickname"></span>
+							</div>
 							<dl class="layui-nav-child">
 								<dd><a href="javascript:;">修改信息</a></dd>
 								<dd><a href="javascript:;">安全管理</a></dd>
@@ -116,13 +83,16 @@
 								<div class="layui-card-header content-title" v-text="message.title"></div>
 								<div class="layui-card-body">
 									<!-- 内容 -->
-									<div class=" content-content" v-text="message.content"></div>
+									<div class=" content-contents" v-text="message.content"></div>
 									<!-- 结尾 -->
 									<div class="layui-row content-bottom">
 										<!-- 时间 -->
 										<div class="layui-col-xs9 content-time" v-text="message.createTime"></div>
 										<!-- 昵称 -->
-										<div class="layui-col-xs3 content-nickname" v-text="message.user.nickname"></div>
+										<div class="layui-col-xs3 content-nickname">
+											<img class="content-image" v-bind:src="'http://192.168.0.105/image/messageboard/user/' + message.user.portrait" />
+											<span v-text="message.user.nickname"></span>
+										</div>
 									</div>
 								</div>
 							</div>
@@ -160,21 +130,25 @@
 			el: '#vue',
 			data: {
 				messages: [],
-				nickname: ''
+				nickname: '',
+				portrait: ''
 			},
 			methods: {
 				exit: function(){
 					var thos = this;
 					$.getJSON('exit', function(res){
-						sessionStorage.removeItem("nickname");
+						remove();
 						thos.nickname = "";
+						thos.portrait = "";
 					})
 				}
 			},
 			created: function() {
 				var nickname = sessionStorage.getItem('nickname');
-				if(nickname != null){
+				var portrait = sessionStorage.getItem('portrait');
+				if(nickname != null && portrait != null){
 					this.nickname = nickname;
+					this.portrait = portrait;
 				}
 			}
 		})
@@ -200,12 +174,12 @@
 				$.post('message/add', info, function(res) {
 					console.log(res)
 					if (res.code == '00000') {
-						layer.msg('留言发送成功', {
+						layer.msg('留言发送成功，审核中', {
 							icon: 1
 						});
 						layer.close(dialog);
 						//刷新留言
-						window.location.reload();
+						getMessage(layer, laypage);
 					} else if (res.code == 'A0200') {
 						layer.confirm('未登录，请先登录！', function(index) {
 							window.location.href = 'login.html';
@@ -217,6 +191,10 @@
 				}, 'json')
 				return false;
 			});
+			getMessage(layer, laypage);
+		});
+		
+		function getMessage(layer, laypage){
 			var load = layer.load(1);
 			$.getJSON('message/all', {
 				page: 1,
@@ -241,7 +219,7 @@
 					}
 				});
 				vue.messages = res.data;
-			})
-		});
+			});
+		}
 	</script>
 </html>

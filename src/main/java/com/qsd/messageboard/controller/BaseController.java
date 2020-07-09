@@ -31,18 +31,32 @@ public class BaseController {
 
 	@ApiOperation(value = "用户登录")
 	@PostMapping("login")
-	public DataVo<String> login(
+	public DataVo<User> login(
 			@ApiParam(value = "用户ID", required = true) String id, 
-			@ApiParam(value = "用户密码", required = true) String password, HttpServletRequest request) {
+			@ApiParam(value = "用户密码", required = true) String password, 
+			HttpServletRequest request) {
 		if (id == null || password == null) {
 			return new DataVo<>(ResultStatus.REQUEST_PARAM_MISS, null);
 		}
 		User user = userService.login(id, password);
 		if (user != null) {
 			request.getSession().setAttribute("user", user);
-			return new DataVo<>(ResultStatus.SUCCESS, user.getNickname());
+			return new DataVo<>(ResultStatus.SUCCESS, user);
 		}
 		return new DataVo<>(ResultStatus.USERNAME_OR_PASSWORD_ERROR, null);
+	}
+	
+	@PostMapping("register")
+	@ApiOperation(value = "用户注册")
+	public BaseVo register(
+			@ApiParam(value = "用户信息", required = true) User user, 
+			HttpServletRequest request) {
+		int result = userService.register(user);
+		if (result > 0) {
+			request.getSession().setAttribute("user", user);
+			return new BaseVo(ResultStatus.SUCCESS);
+		}
+		return new BaseVo(ResultStatus.SYSTEM_ERROR);
 	}
 	
 	@GetMapping("exit")

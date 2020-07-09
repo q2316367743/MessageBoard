@@ -1,0 +1,44 @@
+<html lang="zh" xmlns:th="https://www.thymeleaf.org">
+	<head>
+		<title>留言审批</title>
+		<script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>
+		<script type='text/javascript' charset='utf-8' src='https://www.layuicdn.com/layui-v2.5.6/layui.js'></script>
+		<link rel='stylesheet' type='text/css' href='https://www.layuicdn.com/layui-v2.5.6/css/layui.css' />
+		<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	</head>
+	<body>
+		<div class="layui-col-xs8 layui-col-xs-offset2" style="margin-top: 20px;">
+			<div style="padding: 20px; background-color: #F2F2F2;">
+				<div class="layui-row layui-col-space15">
+					<div class="layui-col-md12" th:each="temporary: ${temporarys.records}">
+						<div class="layui-card">
+							<div class="layui-card-header" th:text="${temporary.title}">标题</div>
+							<div class="layui-card-body">
+								<div th:text="${temporary.content}"></div>
+								<div align="right">
+									<button type="button" class="layui-btn" th:onclick="allow([[${temporary.id}]])">审核通过</button>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="layui-col-md12" th:if="${temporarys.total == 0}">
+						没有待审批的留言
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+	<script type="text/javascript">
+		function allow(id){
+			$.post('message/allow', {
+				id: id
+			}, function(res){
+				if(res.code == '00000'){
+					location.reload();
+				}else{
+					alert(res.message);
+				}
+			}, 'json');
+		}
+	</script>
+</html>

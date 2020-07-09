@@ -23,6 +23,8 @@ public class User {
 	private String password;
 	@ApiModelProperty(value = "用户昵称")
 	private String nickname;
+	@ApiModelProperty(value = "头像")
+	private String portrait;
 	@ApiModelProperty(value = "用户性别")
 	private Integer gender;
 	@ApiModelProperty(value = "用户年龄")
@@ -48,6 +50,12 @@ public class User {
 	}
 	public void setNickname(String nickname) {
 		this.nickname = nickname;
+	}
+	public String getPortrait() {
+		return portrait;
+	}
+	public void setPortrait(String portrait) {
+		this.portrait = portrait;
 	}
 	public Integer getGender() {
 		return gender;

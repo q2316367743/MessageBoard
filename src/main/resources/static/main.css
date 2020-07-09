@@ -1,0 +1,48 @@
+.logo {
+	font-size: 25px;
+	font-family: "楷体", "楷体_GB2312";
+	color: black;
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 200px;
+	height: 100%;
+	line-height: 60px;
+	text-align: center;
+}
+.header{
+	background-color: white;
+	z-index: 1000;
+	height: 60px;
+	position: relative;
+}
+.nav{
+	background-color: white;
+	float: right;
+}
+.nav-title{
+	padding: 0 20px;
+	color: black;
+	cursor: pointer;
+}
+.nav-title:hover{
+	padding: 0 20px;
+	color: black;
+}
+.nav-image{
+	height: 30px;
+	width: 30px;
+	border-radius: 15px;
+}
+.login{
+	padding: 0 20px;
+	height: 60px;
+	float: right;
+	text-align: center;
+	line-height: 60px;
+}
+.login-title{
+	padding: 0 20px;
+	height: 60px;
+	width: 56px;
+}

@@ -1,0 +1,120 @@
+<html>
+	<head>
+		<title>注册</title>
+		<meta charset="utf-8">
+		<link rel="stylesheet" href="https://www.layuicdn.com/layui/css/layui.css">
+		<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+		<script src="https://www.layuicdn.com/layui/layui.js"></script>
+		<style type="text/css">
+			.main{
+				margin-top: 4%;
+				background-color: white;
+				height: 84%;
+				border-radius:20px 20px 20px 20px;
+			}
+			.image{
+				height: 50px;
+				height: 50px;
+				border-radius: 25px;
+			}
+			.image-item{
+				margin-left: 10px;
+			}
+		</style>
+	</head>
+	<body style="background-image: url('./bg.jpg'); background-size: 100% 100%;">
+		<div class="layui-col-xs4 layui-col-xs-offset4 main">
+		    <div align="center" style="font-size: 30px;margin-top: 4%;"><b>注册</b></div>
+		    <div class="layui-col-xs10 layui-col-xs-offset1">
+		    	<form class="layui-form layui-form-pane">
+			        <div class="layui-form-item" style="margin-top: 4%;">
+			        	<label class="layui-form-label">用户名</label>
+			        	<div class="layui-input-block">
+			            	<input type="text" name="id" placeholder="用户名" autocomplete="off"
+			                   class="layui-input" lay-verify="required">
+			            </div>
+			        </div>
+			        <div class="layui-form-item" style="margin-top: 4%;margin-bottom: 4%;">
+			        	<label class="layui-form-label">密码</label>
+			        	<div class="layui-input-block">
+			            	<input type="password" name="password" placeholder="密码" autocomplete="off"
+			                   class="layui-input" lay-verify="required">
+			            </div>
+			        </div>
+			        <div class="layui-form-item" style="margin-top: 4%;margin-bottom: 4%;">
+			        	<label class="layui-form-label">头像</label>
+			        	<div class="layui-input-block">
+							<label for="portrait1" class="image-item">
+								<input id="portrait1" type="radio" name="portrait" value="1" lay-ignore>
+								<img src="http://192.168.0.105/image/messageboard/user/portrait1.jpg" class="image"/>
+							</label>
+							<label for="portrait2" class="image-item">
+								<input id="portrait2" type="radio" name="portrait" value="2" lay-ignore>
+								<img src="http://192.168.0.105/image/messageboard/user/portrait2.jpg" class="image"/>
+							</label>
+							<label for="portrait3" class="image-item">
+								<input id="portrait3" type="radio" name="portrait" value="3" lay-ignore>
+								<img src="http://192.168.0.105/image/messageboard/user/portrait3.jpg" class="image"/>
+							</label>
+			            </div>
+			        </div>
+			        <div class="layui-form-item">
+			        	<label class="layui-form-label">昵称</label>
+			        	<div class="layui-input-block">
+			            	<input type="text" name="nickname" placeholder="昵称" autocomplete="off"
+			                   class="layui-input" lay-verify="required">
+			            </div>
+			        </div>
+			        <div class="layui-form-item">
+			        	<label class="layui-form-label">性别</label>
+			        	<div class="layui-input-block">
+			        		<div class="layui-input">
+				        		<input type="radio" name="gender" value="0" title="保密">
+				            	<input type="radio" name="gender" value="1" title="男">
+	      						<input type="radio" name="gender" value="2" title="女">
+      						</div>
+			            </div>
+			        </div>
+			        <div class="layui-form-item">
+			        	<label class="layui-form-label">年龄</label>
+			        	<div class="layui-input-block">
+			            	<input type="text" name="age" placeholder="年龄" autocomplete="off"
+			                   class="layui-input" lay-verify="number">
+			            </div>
+			        </div>
+			        <div class="layui-form-item">
+			        	<div class="layui-col-xs6 layui-col-xs-offset3">
+			            	<input style="width: 100%;" type="submit" lay-submit class="layui-btn layui-btn-radius" value="注册" />
+			            </div>
+			        </div>
+			        <div align="right" style="margin-top: 2%;">
+			        	<span>已有账号？</span>
+			        	<a href="register.html">立即登录</a>
+			        </div>
+			    </form>
+		    </div>
+		</div>
+	</body>
+	<script type="text/javascript">
+		layui.use(['form', 'layer'], function(){
+			var form = layui.form;
+			var layer = layui.layer;
+			form.on('submit', function(data){
+				var load = layer.load(1);
+				data.field.portrait = 'portrait' + data.field.portrait + '.jpg'
+				var info = JSON.parse(JSON.stringify(data.field))
+				console.log(info);
+				$.post('register', info, function(res){
+					if(res.code == '00000'){
+						sessionStorage.setItem('nickname', info.nickname);
+						window.location.href = "/"
+					}else{
+						layer.close(load);
+						layer.alert(res.message);
+					}
+				}, 'json');
+				return false;
+			})
+		})
+	</script>
+</html>

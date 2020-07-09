@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <title>layout 后台大布局 - Layui</title>
-  <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>
-		<script type='text/javascript' charset='utf-8' src='https://www.layuicdn.com/layui-v2.5.6/layui.js'></script>
-		<link rel='stylesheet' type='text/css' href='https://www.layuicdn.com/layui-v2.5.6/css/layui.css' />
-		<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<title>留言控制台</title>
+	<script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>
+	<script type='text/javascript' charset='utf-8' src='https://www.layuicdn.com/layui-v2.5.6/layui.js'></script>
+	<link rel='stylesheet' type='text/css' href='https://www.layuicdn.com/layui-v2.5.6/css/layui.css' />
+	<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body class="layui-layout-body">
 <div class="layui-layout layui-layout-admin">
   <div class="layui-header">
-    <div class="layui-logo">layui 后台布局</div>
+    <div class="layui-logo">留言控制台</div>
     <!-- 头部区域（可配合layui已有的水平导航） -->
     <ul class="layui-nav layui-layout-left">
       <li class="layui-nav-item"><a href="">控制台</a></li>
@@ -30,15 +30,15 @@
     <ul class="layui-nav layui-layout-right">
       <li class="layui-nav-item">
         <a href="javascript:;">
-          <img src="http://t.cn/RCzsdCq" class="layui-nav-img">
-          贤心
+        	<img src="http://t.cn/RCzsdCq" class="layui-nav-img">
+          	管理员
         </a>
         <dl class="layui-nav-child">
           <dd><a href="">基本资料</a></dd>
           <dd><a href="">安全设置</a></dd>
         </dl>
       </li>
-      <li class="layui-nav-item"><a href="">退了</a></li>
+      <li class="layui-nav-item"><a href="exit">退了</a></li>
     </ul>
   </div>
   
@@ -46,17 +46,15 @@
     <div class="layui-side-scroll">
       <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
       <ul class="layui-nav layui-nav-tree"  lay-filter="test">
-        <li class="layui-nav-item layui-nav-itemed">
-          <a class="" href="javascript:;">所有商品</a>
+      	<li class="layui-nav-item layui-this"><a href="">仪表盘</a></li>
+        <li class="layui-nav-item">
+          <a class="" href="javascript:;">留言管理</a>
           <dl class="layui-nav-child">
-            <dd><a href="javascript:;">列表一</a></dd>
-            <dd><a href="javascript:;">列表二</a></dd>
-            <dd><a href="javascript:;">列表三</a></dd>
-            <dd><a href="">超链接</a></dd>
+            <dd><a href="javascript:;" id="check">留言审核</a></dd>
           </dl>
         </li>
         <li class="layui-nav-item">
-          <a href="javascript:;">解决方案</a>
+          <a href="javascript:;">用户管理</a>
           <dl class="layui-nav-child">
             <dd><a href="javascript:;">列表一</a></dd>
             <dd><a href="javascript:;">列表二</a></dd>
@@ -70,7 +68,7 @@
   </div>
   
   <div class="layui-body">
-    <iframe src="dashboard.html" ></iframe>
+    <iframe id="body" src="dashboard" frameborder=”no” border=”0″ marginwidth=”0″ marginheight=”0″ scrolling=”no” allowtransparency=”yes” height="100%" width="100%"></iframe>
   </div>
   
   <div class="layui-footer">
@@ -82,7 +80,9 @@
 //JavaScript代码区域
 layui.use('element', function(){
   var element = layui.element;
-  
+  $("#check").on("click", function(){
+	  $("#body").attr("src", "message?page=1&limit=9");
+  })
 });
 </script>
 </body>

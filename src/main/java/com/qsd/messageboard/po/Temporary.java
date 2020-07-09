@@ -13,15 +13,15 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
- * @Description 
+ * @Description 临时存储留言
  * @Author Esion
- * @Data 2020年7月5日
+ * @Data 2020年7月8日
  */
-@TableName("message")
-@ApiModel(description = "留言信息")
-public class Message implements Serializable {
-	
-	private static final long serialVersionUID = -37495510309824867L;
+@TableName("temporary")
+@ApiModel(value = "temporary", description = "临时存储留言")
+public class Temporary implements Serializable {
+
+	private static final long serialVersionUID = 6053527941052603932L;
 	@TableId(type = IdType.AUTO)
 	@ApiModelProperty(value = "留言ID", required = false, example = "1")
 	private Integer id;
@@ -36,11 +36,9 @@ public class Message implements Serializable {
 	private Timestamp createTime;
 	@ApiModelProperty(value = "留言的内容")
 	private String content;
-	@TableField(exist = false)
-	private User user;
-	public Message() {
+	public Temporary() {
 	}
-	public Message(String userId, String title, Timestamp createTime, String content) {
+	public Temporary(String userId, String title, Timestamp createTime, String content) {
 		this.userId = userId;
 		this.title = title;
 		this.createTime = createTime;
@@ -76,11 +74,8 @@ public class Message implements Serializable {
 	public void setContent(String content) {
 		this.content = content;
 	}
-	public User getUser() {
-		return user;
-	}
-	public void setUser(User user) {
-		this.user = user;
+	public Message toMessage() {
+		return new Message(this.userId, this.title, this.createTime, this.content);
 	}
 
 }

@@ -6,26 +6,22 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
-import com.qsd.messageboard.enums.ResultStatus;
-
 /**
  * @Description 
  * @Author Esion
  * @Data 2020年7月5日
  */
 @Component
-public class LoginInterceptor implements HandlerInterceptor {
+public class AdminInterceptor implements HandlerInterceptor {
 
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
-		Object object = request.getSession().getAttribute("user");
+		Object object = request.getSession().getAttribute("admin");
 		if (object != null) {
 			return true;
 		}else {
-			response.setCharacterEncoding("utf-8");
-			response.setContentType("text/json;charset=utf-8");
-			response.getWriter().print(ResultStatus.LOGIN_ERROR.toJSONStr());
+			response.sendRedirect("/admin/login");
 			return false;
 		}
 	}

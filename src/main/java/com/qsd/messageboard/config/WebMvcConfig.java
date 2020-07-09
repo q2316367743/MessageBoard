@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import com.qsd.messageboard.interceptor.AdminInterceptor;
 import com.qsd.messageboard.interceptor.LoginInterceptor;
 
 /**
@@ -20,6 +21,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
 	
 	@Autowired
 	private LoginInterceptor loginInterceptor;
+	@Autowired
+	private AdminInterceptor adminInterceptor;
 
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
@@ -30,6 +33,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
 		registry.addInterceptor(loginInterceptor)
 				.addPathPatterns(addPathPatterns)
 				.excludePathPatterns(excludePathPatterns);
+		registry.addInterceptor(adminInterceptor)
+				.addPathPatterns("/admin/**")
+				.excludePathPatterns("/admin/login", "/admin/login.html");
 	}
 
 	

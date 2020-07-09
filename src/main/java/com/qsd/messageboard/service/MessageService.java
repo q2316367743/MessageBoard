@@ -9,7 +9,6 @@ import com.qsd.messageboard.vo.PageVo;
  * @Author Esion
  * @Data 2020年7月5日
  */
-
 public interface MessageService {
 
 	/**
@@ -24,5 +23,10 @@ public interface MessageService {
 	 * @param limit 每页的数目
 	 * */
 	public PageVo<Message> all(Integer page, Integer limit);
+	/**
+	 * 审批一条留言
+	 * @param id 留言ID
+	 * */
+	public ResultStatus allow(Integer id);
 	
 }

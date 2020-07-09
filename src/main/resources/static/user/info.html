@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>用户信息</title>
+		<script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>
+		<script type='text/javascript' charset='utf-8' src='https://www.layuicdn.com/layui-v2.5.6/layui.js'></script>
+		<link rel='stylesheet' type='text/css' href='https://www.layuicdn.com/layui-v2.5.6/css/layui.css' />
+		<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="../main.css"/>
+		<script src="../main.js"></script>
+		<style type="text/css">
+			.image{
+				height: 100px;
+				width: 100px;
+				border-radius: 50px;
+				margin-left: 20px;
+			}
+			.item{
+				line-height: 38px;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="body">
+			<div class="header">
+				<div class="logo">
+					<a href="../index.html">Esion的留言板</a>
+				</div>
+				<div class="layui-col-xs3 layui-col-xs-offset9">
+					<ul class="layui-nav nav">
+						<li class="layui-nav-item">
+							<div href="javascript:;" class="nav-title">
+								<img class="nav-image" alt="头像" v-bind:src="'http://192.168.0.105/image/messageboard/user/' + user.portrait">
+								<span v-text="user.nickname"></span>
+							</div>
+							<dl class="layui-nav-child">
+								<dd><a href="javascript:;">修改信息</a></dd>
+								<dd><a href="javascript:;">安全管理</a></dd>
+								<dd><a href="javascript:;" v-on:click="exit()">退了</a></dd>
+							</dl>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div class="layui-col-xs6 layui-col-xs-offset3">
+				<div class="layui-form layui-form-pane">
+					<div class="layui-form-item" style="margin-top: 4%;">
+						<label class="layui-form-label">用户名</label>
+						<div class="layui-input-block">
+							<div class="layui-input item" v-text="user.id"></div>
+						</div>
+					</div>
+					<div class="layui-form-item" style="margin-top: 4%;margin-bottom: 4%;">
+						<label class="layui-form-label" style="margin-top: 31px;">头像</label>
+						<div class="layui-input-block">
+							<img v-bind:src="'http://192.168.0.105/image/messageboard/user/' + user.portrait" class="image"/>
+						</div>
+					</div>
+					<div class="layui-form-item">
+						<label class="layui-form-label">昵称</label>
+						<div class="layui-input-block">
+							<div class="layui-input item" v-text="user.nickname"></div>
+						</div>
+					</div>
+					<div class="layui-form-item">
+						<label class="layui-form-label">性别</label>
+						<div class="layui-input-block">
+							<div class="layui-input item" v-if="user.gender == 0">保密</div>
+							<div class="layui-input item" v-if="user.gender == 1">男</div>
+							<div class="layui-input item" v-if="user.gender == 2">女</div>
+						</div>
+					</div>
+					<div class="layui-form-item">
+						<label class="layui-form-label">年龄</label>
+						<div class="layui-input-block">
+							<div class="layui-input item" v-text="user.age"></div>
+						</div>
+					</div>
+					<div class="layui-form-item">
+						<label class="layui-form-label">QQ</label>
+						<div class="layui-input-block">
+							<div class="layui-input item" v-text="user.qq"></div>
+						</div>
+					</div>
+					<div class="layui-form-item">
+						<label class="layui-form-label">email</label>
+						<div class="layui-input-block">
+							<div class="layui-input item" v-text="user.email"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+	<script type="application/javascript">
+		var vue = new Vue({
+			el: '#body',
+			data: {
+				user: {
+					id: '',
+					nickname: '',
+					portrait: '',
+					gender: 0,
+					age: 0,
+					qq: '',
+					email: ''
+				}
+			},
+			created: function(){
+				var nickname = sessionStorage.getItem('nickname');
+				if(nickname == null){
+					alert("请登录");
+					window.loaction.href = '../login.html';
+				}
+				this.user.id = sessionStorage.getItem('id');
+				this.user.nickname = nickname
+				this.user.portrait = sessionStorage.getItem('portrait');
+				this.user.gender = sessionStorage.getItem('gender');
+				this.user.age = sessionStorage.getItem('age');
+				this.user.qq = sessionStorage.getItem('qq');
+				this.user.email = sessionStorage.getItem('email');
+			},
+			methods: {
+				exit: function(){
+					var thos = this;
+					$.getJSON('../exit', function(res){
+						remove();
+						window.location.href = '../index.html';
+					})
+				}
+			}
+		})
+		layui.use('element', function(){
+			var element = layui.element;
+		})
+	</script>
+</html>

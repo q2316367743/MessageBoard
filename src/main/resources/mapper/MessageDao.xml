@@ -11,6 +11,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="content" column="content"/>
 		<result property="user.id" column="id"/>
 		<result property="user.nickname" column="nickname"/>
+		<result property="user.portrait" column="portrait"/>
 		<result property="user.gender" column="gender"/>
 		<result property="user.age" column="age"/>
 		<result property="user.qq" column="qq"/>
@@ -22,6 +23,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		from message m
 		inner join user u
 		on u.id = m.user_id
+		order by create_time desc
 	</select>
 	
 </mapper>
