@@ -2,15 +2,10 @@ package com.qsd.messageboard.controller.admin;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.qsd.messageboard.dao.TemporaryDao;
-import com.qsd.messageboard.po.Temporary;
 
 /**
  * @Description 
@@ -20,9 +15,6 @@ import com.qsd.messageboard.po.Temporary;
 @Controller
 @RequestMapping("admin")
 public class IndexController {
-	
-	@Autowired
-	private TemporaryDao temporaryDao;
 	
 	@GetMapping("")
 	public String index() {
@@ -61,10 +53,6 @@ public class IndexController {
 	
 	@GetMapping("message")
 	public String message(Integer page, Integer limit, Model model) {
-		if (page == null) page = 1;
-		if (limit == null) limit = 9;
-		Page<Temporary> temporarys = temporaryDao.selectPage(new Page<>(page, limit), null);
-		model.addAttribute("temporarys", temporarys);
 		return "admin/message";
 	}
 	

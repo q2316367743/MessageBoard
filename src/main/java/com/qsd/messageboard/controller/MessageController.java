@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.qsd.messageboard.dto.MessageWithUser;
 import com.qsd.messageboard.enums.ResultStatus;
-import com.qsd.messageboard.po.Message;
 import com.qsd.messageboard.po.User;
 import com.qsd.messageboard.service.MessageService;
 import com.qsd.messageboard.vo.BaseVo;
@@ -47,10 +47,10 @@ public class MessageController {
 	
 	@GetMapping("all")
 	@ApiOperation(value = "查询全部留言")
-	public PageVo<Message> all(
+	public PageVo<MessageWithUser> all(
 			@ApiParam(value = "页码", required = false, example = "1")Integer page, 
 			@ApiParam(value = "每页的数目", required = false, example = "9")Integer limit){
 		return messageService.all(page, limit);
 	}
-
+	
 }

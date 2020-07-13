@@ -14,38 +14,66 @@
 				margin-top: 20px;
 				padding: 20px;
 				background-color: #F2F2F2;
-				height: 400px;
+				height: 450px;
 				overflow: auto;
 			}
-
 			#content::-webkit-scrollbar {
 				display: none;
 			}
-
 			.content-title {
 				font-size: 20px;
+				cursor: pointer;
 			}
-
-			.content-content {}
-
+			.content-contents {
+				height: 20px;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+				display: block;
+			}
 			.content-bottom {
 				margin-top: 10px;
 			}
-
 			.content-time {}
-
 			.content-nickname {
 				cursor: pointer;
 			}
 			.content-image{
-				height: 20px;
-				width: 20px;
-				border-radius: 10px;
+				height: 24px;
+				width: 24px;
+				border-radius: 12px;
+			}
+			.comment-img{
+				height: 32px;
+				width: 32px;
+				border-radius: 16px;
+			}
+			.info-title{
+				font-size: 20px;
+			}
+			.info-content{
+				
+			}
+			.info-message{
+				
+			}
+			.left-nav-item{
+				font-size: 30px;
+				text-align: center;
+				margin-top: 20px;
+				font-family: '宋体';
+				cursor: pointer;
+				padding-bottom: 10px;
+				width: 80%;
+			}
+			.left-nav-item-this{
+				border-bottom:2px solid #009688;
 			}
 		</style>
 	</head>
 	<body class="layui-layout-body">
 		<div id="vue" class="layui-layout layui-layout-admin">
+			<!-- 顶部栏 -->
 			<div class="header">
 				<div class="logo">
 					Esion的留言板
@@ -57,13 +85,14 @@
 						<a class="login-title" href="register.html">注册</a>
 					</div>
 					<ul class="layui-nav nav" v-else>
+						<li class="layui-nav-item" style="color: black;"><a href="javascript:;">测试</a></li>
 						<li class="layui-nav-item">
-							<div class="nav-title" onclick="window.location.href = 'user/info.html'">
+							<div class="nav-title">
 								<img class="nav-image" alt="头像" v-bind:src="'http://192.168.0.105/image/messageboard/user/' + portrait">
 								<span v-text="nickname"></span>
 							</div>
 							<dl class="layui-nav-child">
-								<dd><a href="javascript:;">修改信息</a></dd>
+								<dd><a href="user/info.html">个人信息</a></dd>
 								<dd><a href="javascript:;">安全管理</a></dd>
 								<dd><a href="javascript:;" v-on:click="exit()">退了</a></dd>
 							</dl>
@@ -71,44 +100,90 @@
 					</ul>
 				</div>
 			</div>
-			<div class="layui-col-xs6 layui-col-xs-offset3">
-				<div class="layui-row" style="margin-top: 10px;">
-					<button id="addBtn" type="button" class="layui-btn">新建留言</button>
+			<!-- 左侧导航栏 -->
+			<div class='layui-col-xs2' style="margin-top: 20px;">
+				<div class="layui-col-xs7 layui-col-xs-offset5">
+					<!-- 首页 -->
+					<div class="left-nav-item" v-bind:class="{'left-nav-item-this': main}" v-on:click="toMain()">
+						首页
+					</div>
+					<!-- 搜索 -->
+					<div class="left-nav-item" v-bind:class="{'left-nav-item-this': search}" v-on:click="toSearch()">
+						搜索
+					</div>
 				</div>
-				<div class="layui-row">
-					<div id="content" class="layui-row layui-col-space15">
-						<div class="layui-row" v-for="message in messages">
-							<div class="layui-card">
-								<!-- 标题 -->
-								<div class="layui-card-header content-title" v-text="message.title"></div>
-								<div class="layui-card-body">
-									<!-- 内容 -->
-									<div class=" content-contents" v-text="message.content"></div>
-									<!-- 结尾 -->
-									<div class="layui-row content-bottom">
-										<!-- 时间 -->
-										<div class="layui-col-xs9 content-time" v-text="message.createTime"></div>
-										<!-- 昵称 -->
-										<div class="layui-col-xs3 content-nickname">
-											<img class="content-image" v-bind:src="'http://192.168.0.105/image/messageboard/user/' + message.user.portrait" />
-											<span v-text="message.user.nickname"></span>
-										</div>
+			</div>
+			<!-- 数据显示区域 -->
+			<div class="layui-col-xs5">
+				<div id="content" class="layui-col-space15">
+					<div class="layui-row" v-for="(message, index) in messages">
+						<div class="layui-card">
+							<!-- 标题 -->
+							<div class="layui-card-header content-title" v-text="message.title" v-on:click="info(index)"></div>
+							<div class="layui-card-body">
+								<!-- 内容 -->
+								<div class="content-contents" v-text="message.content"></div>
+								<!-- 结尾 -->
+								<div class="layui-row content-bottom">
+									<!-- 时间 -->
+									<div class="layui-col-xs9 content-time" v-text="message.createTime"></div>
+									<!-- 昵称 -->
+									<div class="layui-col-xs3 content-nickname">
+										<img class="content-image" v-bind:src="'http://192.168.0.105/image/messageboard/user/' + message.user.portrait" />
+										<span v-text="message.user.nickname"></span>
 									</div>
 								</div>
 							</div>
 						</div>
 					</div>
-					<div id="page" align="center" style="margin-top: 20px;"></div>
+					<!-- 流加载信息 -->
+					<div id="page">
+						
+					</div>
+				</div>
+			</div>
+			<!-- 右半部工具栏 -->
+			<div class="layui-col-xs2 layui-col-xs-offset1">
+				<!-- 公告栏 -->
+				<div class="layui-col-xs12" style="margin-top: 20px;height: 250px;">
+					<fieldset class="layui-elem-field layui-field-title">
+						<legend>公告栏</legend>
+						<div style="margin-top: 20px;">
+							<div style="margin-top: 10px;">
+								<a href="javascript:;">留言须知</a>
+								<div style="float: right;">2020-7-12</div>
+							</div>
+							<div style="margin-top: 10px;">
+								<a href="javascript:;">回复告知</a>
+								<div style="float: right;">2020-7-12</div>
+							</div>
+						</div>
+					</fieldset>
+				</div>
+				<!-- 使用帮助 -->
+				<div class="layui-col-xs12" style="margin-top: 20px;height: 250px;">
+					<fieldset class="layui-elem-field layui-field-title">
+						<legend>使用帮助</legend>
+						<div style="margin-top: 20px;">
+							<div class="layui-row" style="margin-top: 10px;">
+								<a href="javascript:;">登录问题</a>
+							</div>
+							<div class="layui-row" style="margin-top: 10px;">
+								<a href="javascript:;">注册问题</a>
+							</div>
+						</div>
+					</fieldset>
 				</div>
 			</div>
 		</div>
 	</body>
+	<!-- 新增留言对话框 -->
 	<div id="add" style="display: none;margin-top: 40px;" class="layui-col-xs11">
 		<form class="layui-form">
 			<div class="layui-form-item">
 				<label class="layui-form-label">标题</label>
 				<div class="layui-input-block">
-					<input type="text" name="title" autocomplete="off" placeholder="请输入标题" class="layui-input">
+					<input type="text" name="title" autocomplete="off" placeholder="请输入标题(不能超过15个字)" class="layui-input">
 				</div>
 			</div>
 			<div class="layui-form-item">
@@ -125,56 +200,49 @@
 			</div>
 		</form>
 	</div>
+	<!-- 留言详情对话框 -->
+	<div id="dialog" style="display: none;">
+		<div style="padding: 10px;">
+			<!-- 标题 -->
+			<div align="center" class="info-title">{{d.title}}</div>
+			<!-- 内容 -->
+			<div class="info-content" style="margin-top: 20px;">&#12288;&#12288;{{d.content}}</div>
+			<!-- 评论 -->
+			<div style="margin-top: 20px;">
+				<div class="layui-row" style="font-size: 20px;">评论</div>
+				<!-- 发表评论 -->
+				<div class="layui-row" style="font-size: 10px;margin-top: 10px;">
+					<div class="layui-col-xs1" style="text-align: center;">
+						<img class="comment-img" src="http://192.168.0.105/image/messageboard/user/default.jpg" />
+					</div>
+					<div class="layui-col-xs10" style="padding-right: 20px;">
+						<input placeholder="期待您的评论" class="layui-input" type="text" id="addComment" />
+					</div>
+					<div class="layui-col-xs1">
+						<button type="button" class="layui-btn">评论</button>
+					</div>
+				</div>
+				<!-- 评论内容 -->
+				<div class="layui-row">
+					
+				</div>
+			</div>
+		</div>
+	</div>
 	<script type="text/javascript">
-		var vue = new Vue({
-			el: '#vue',
-			data: {
-				messages: [],
-				nickname: '',
-				portrait: ''
-			},
-			methods: {
-				exit: function(){
-					var thos = this;
-					$.getJSON('exit', function(res){
-						remove();
-						thos.nickname = "";
-						thos.portrait = "";
-					})
-				}
-			},
-			created: function() {
-				var nickname = sessionStorage.getItem('nickname');
-				var portrait = sessionStorage.getItem('portrait');
-				if(nickname != null && portrait != null){
-					this.nickname = nickname;
-					this.portrait = portrait;
-				}
-			}
-		})
-		layui.use(['form', 'layer', 'laypage', 'element'], function() {
+		layui.use(['form', 'layer', 'flow', 'util', 'laytpl'], function() {
 			var form = layui.form;
 			var layer = layui.layer;
-			var laypage = layui.laypage;
-			var element = layui.element;
-			$("#addBtn").on('click', function() {
-				dialog = layer.open({
-					type: 1,
-					title: '新增留言',
-					shadeClose: true,
-					shade: false,
-					maxmin: true, //开启最大化最小化按钮
-					area: ['600px', '400px'],
-					content: $("#add")
-				});
-			})
+			var flow = layui.flow;
+			var util = layui.util;
+			var laytpl = layui.laytpl;
+			//留言提交
 			form.on('submit', function(data) {
 				var load = layer.load(1);
 				var info = JSON.parse(JSON.stringify(data.field));
 				$.post('message/add', info, function(res) {
-					console.log(res)
 					if (res.code == '00000') {
-						layer.msg('留言发送成功，审核中', {
+						layer.msg('留言发送成功', {
 							icon: 1
 						});
 						layer.close(dialog);
@@ -191,34 +259,125 @@
 				}, 'json')
 				return false;
 			});
-			getMessage(layer, laypage);
-		});
-		
-		function getMessage(layer, laypage){
-			var load = layer.load(1);
-			$.getJSON('message/all', {
-				page: 1,
-				limit: 9
-			}, function(res) {
-				layer.close(load);
-				laypage.render({
-					elem: 'page', //注意，这里的 test1 是 ID，不用加 # 号
-					count: res.count, //数据总数，从服务端得到
-					jump: function(obj, first) {
-						//首次不执行
-						if (!first) {
-							var load = layer.load(1);
-							$.getJSON('message/all', {
-								page: obj.curr,
-								limit: obj.limit
-							}, function(res) {
-								layer.close(load);
-								vue.message = res.data;
+			//右下角新建留言
+			util.fixbar({
+				bar1: '&#xe642;',
+				css: {right: 100, bottom: 100},
+				click: function(type){
+					dialog = layer.open({
+						type: 1,
+						title: '新增留言',
+						shadeClose: true,
+						shade: false,
+						maxmin: true, //开启最大化最小化按钮
+						area: ['600px', '400px'],
+						content: $("#add")
+					});
+				}
+			});
+			//vue模板
+			vue = new Vue({
+				el: '#vue',
+				data: {
+					messages: [],
+					nickname: '',
+					portrait: '',
+					main: true,
+					search: false
+				},
+				methods: {
+					//退出登陆
+					exit: function(){
+						var thos = this;
+						$.getJSON('exit', function(res){
+							remove();
+							thos.nickname = "";
+							thos.portrait = "";
+							$(".comment-img").attr('src', 'http://192.168.0.105/image/messageboard/user/default.jpg');
+						})
+					},
+					//留言详情
+					info: function(index){
+						var message = this.messages[index];
+						var getTpl = $('#dialog').html();
+						laytpl(getTpl).render(message, function(html){
+							layer.open({
+								type: 1,
+								title: '留言详情',
+								shadeClose: true,
+								shade: false,
+								maxmin: true, //开启最大化最小化按钮
+								area: ['700px', '450px'],
+								content: html
+							})
+						})
+					},
+					toMain: function(){
+						this.main = true;
+						this.search = false;
+						$("#page").show();
+						index(flow);
+					},
+					toSearch: function(){
+						this.messages = [];
+						$("#page").hide();
+						var thos = this;
+						this.main = false;
+						this.search = true;
+						layer.prompt({
+							formType: 0,
+							title: '搜索',
+						}, function(value, index, elem){
+							$("#page").show();
+							layer.close(index);
+							flow.load({
+								elem: '#page', //指定列表容器
+								scrollElem: '#content',
+								done: function(page, next){ //到达临界点（默认滚动触发），触发下一页
+									$.getJSON('message/search', {
+										page: page,
+										limit: 9,
+										key: value
+									}, function(res) {
+										//结果
+										//vue.messages = vue.messages.concat(res.data);
+										next('', page < res.count / 9);
+									});
+								}
 							});
-						}
+						});
 					}
-				});
-				vue.messages = res.data;
+				},
+				created: function() {
+					var nickname = sessionStorage.getItem('nickname');
+					var portrait = sessionStorage.getItem('portrait');
+					if(nickname != null && portrait != null){
+						this.nickname = nickname;
+						this.portrait = portrait;
+						$(".comment-img").attr('src', 'http://192.168.0.105/image/messageboard/user/' + portrait)
+						layui.use('element', function(){
+							var element = layui.element;
+						})
+					}
+					console.log($(".comment-img").attr('src'));
+				}
+			});
+			index(flow);
+		});
+		function index(flow){
+			//留言主体流加载
+			flow.load({
+				elem: '#page', //指定列表容器
+				scrollElem: '#content',
+				done: function(page, next){ //到达临界点（默认滚动触发），触发下一页
+					$.getJSON('message/all', {
+						page: page,
+						limit: 9
+					}, function(res) {
+						vue.messages = vue.messages.concat(res.data);
+						next('', page < res.count / 9);
+					});
+				}
 			});
 		}
 	</script>

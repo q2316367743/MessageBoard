@@ -36,8 +36,6 @@ public class Message implements Serializable {
 	private Timestamp createTime;
 	@ApiModelProperty(value = "留言的内容")
 	private String content;
-	@TableField(exist = false)
-	private User user;
 	public Message() {
 	}
 	public Message(String userId, String title, Timestamp createTime, String content) {
@@ -75,12 +73,6 @@ public class Message implements Serializable {
 	}
 	public void setContent(String content) {
 		this.content = content;
-	}
-	public User getUser() {
-		return user;
-	}
-	public void setUser(User user) {
-		this.user = user;
 	}
 
 }

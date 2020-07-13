@@ -4,7 +4,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.qsd.messageboard.dao.MessageDao">
 
-	<resultMap type="message" id="messageMap">
+	<resultMap type="com.qsd.messageboard.dto.MessageWithUser" id="messageWithUserMap">
 		<id property="id" column="id"/>
 		<result property="title" column="title"/>
 		<result property="createTime" column="create_time"/>
@@ -18,7 +18,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="user.email" column="email"/>
 	</resultMap>
 
-	<select id="queryMessages" resultMap="messageMap">
+	<select id="queryMessages" resultMap="messageWithUserMap">
 		select m.*,u.*
 		from message m
 		inner join user u

@@ -1,11 +1,11 @@
 package com.qsd.messageboard.service;
 
+import com.qsd.messageboard.dto.MessageWithUser;
 import com.qsd.messageboard.enums.ResultStatus;
-import com.qsd.messageboard.po.Message;
 import com.qsd.messageboard.vo.PageVo;
 
 /**
- * @Description 
+ * @Description 留言信息业务层
  * @Author Esion
  * @Data 2020年7月5日
  */
@@ -22,11 +22,6 @@ public interface MessageService {
 	 * @param page 页码
 	 * @param limit 每页的数目
 	 * */
-	public PageVo<Message> all(Integer page, Integer limit);
-	/**
-	 * 审批一条留言
-	 * @param id 留言ID
-	 * */
-	public ResultStatus allow(Integer id);
+	public PageVo<MessageWithUser> all(Integer page, Integer limit);
 	
 }
